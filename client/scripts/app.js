@@ -4,6 +4,7 @@ App = function() {
   this.rooms = {};
   this.currRoom = 'lobby';
   this.friends = {};
+  this.user = '';
 };
 
 App.prototype.init = function() {
