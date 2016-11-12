@@ -4,7 +4,7 @@ App = function() {
   this.rooms = {};
   this.currRoom = 'lobby';
   this.friends = {};
-  this.user = '';
+  this.user = 'anonymous';
 };
 
 App.prototype.init = function() {
@@ -20,13 +20,22 @@ App.prototype.init = function() {
       // console.log('hi');
       source.fetch(updateMessages);
     });
+    $('.username').on('click', function(event) {
+      source.handleUsernameClick(event);
+    });
+    $('.useInput').on('click', function(event) {
+      source.handleSubmit(event);
+    });
   });
 };
 
 App.prototype.renderRoom = function(room) {
   console.log('rendering');
-  var toRender = '<option value="' + room + '">' + room + '</option>';
-  $('#roomSelect').append(toRender);
+  // var toRender = '<option value="' + room + '">' + room + '</option>';
+  var $room = $('<option/>');
+  $room.attr('value', room);
+  $room.text(room);
+  $('#roomSelect').append($room);
 };
 
 App.prototype.renderMessages = function(room) {
@@ -40,21 +49,36 @@ App.prototype.renderMessages = function(room) {
       this.renderMessage(this.messages[i]);
     }
   }
-  $('.user').on('click', function(event) {
-    source.handleUsernameClick(event);
-  });
+};
+
+App.prototype.handleSubmit = function(input) {
+  // var message = {
+  //   username: this.name,
+  //   text: input,
+  //   roomname: this.currRoom
+  // }
+  console.log('hi',input);
+  // this.send(message);
 };
 
 App.prototype.handleUsernameClick = function(event) {
   this.friends[event.target.id] = true;
-  // console.log(this);
-  // console.log(this.friends);
+  console.log('help');
 };
 
 App.prototype.renderMessage = function(messageObj) {
   console.log('rendering');
-  var message = '<div class="message"><span class="user" id="' + messageObj.username + '">' + messageObj.username + '</span>: ' + messageObj.text + '</div>';
-  $('#chats').append(message);
+
+  // var message = '<div class="message"><span class="username" id="' + messageObj.username + '">' + messageObj.username + '</span>: ' + messageObj.text + '</div>';
+  var $message = $('<div/>');
+  $message.text(': ' + messageObj.text);
+  $message.addClass("message");
+  var $user = $('<span/>');
+  $user.text('' + messageObj.username);
+  $user.attr('id', messageObj.username);
+  $user.addClass('username');
+  $message.prepend($user);
+  $('#chats').append($message);
 };
 
 App.prototype.send = function(message) {
