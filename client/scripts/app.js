@@ -23,9 +23,9 @@ App.prototype.init = function() {
     $('.username').on('click', function(event) {
       source.handleUsernameClick(event);
     });
-    $('.useInput').on('click', function(event) {
-      source.handleSubmit(event);
-    });
+    $('#send').submit(function(event){
+      event.prevent.Default();
+    })
   });
 };
 
@@ -51,6 +51,12 @@ App.prototype.renderMessages = function(room) {
   }
 };
 
+App.prototype.escapeHTML = function(obj){
+  var $tmp = document.createElement('div');
+  $tmp.appendChild(document.createTextNode('' + obj));
+  return $tmp.innerHTML;
+}
+
 App.prototype.handleSubmit = function(input) {
   // var message = {
   //   username: this.name,
@@ -68,14 +74,14 @@ App.prototype.handleUsernameClick = function(event) {
 
 App.prototype.renderMessage = function(messageObj) {
   console.log('rendering');
-
+  var source = this;
   // var message = '<div class="message"><span class="username" id="' + messageObj.username + '">' + messageObj.username + '</span>: ' + messageObj.text + '</div>';
   var $message = $('<div/>');
   $message.text(': ' + messageObj.text);
   $message.addClass("message");
   var $user = $('<span/>');
   $user.text('' + messageObj.username);
-  $user.attr('id', messageObj.username);
+  $user.attr('id', source.escapeHTML(messageObj.username));
   $user.addClass('username');
   $message.prepend($user);
   $('#chats').append($message);
